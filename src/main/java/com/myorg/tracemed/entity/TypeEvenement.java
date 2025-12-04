@@ -4,5 +4,6 @@ public enum TypeEvenement {
     RECU,
     TRANSFERT,
     ADMINISTRE,
+    ANNULATION,
     AUTRE
 }
