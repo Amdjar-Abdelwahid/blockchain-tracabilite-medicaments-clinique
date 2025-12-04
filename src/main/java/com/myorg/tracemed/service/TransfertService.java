@@ -19,18 +19,18 @@ public class TransfertService {
     private final OrganisationRepository organisationRepo;
     private final ColisPhysiqueRepository colisRepo;
     private final DemandeTransfertRepository demandeRepo;
-    private final EvenementColisRepository eventRepo;
+    private final EvenementService evenementService;
 
     public TransfertService(UtilisateurRepository utilisateurRepo,
                             OrganisationRepository organisationRepo,
                             ColisPhysiqueRepository colisRepo,
                             DemandeTransfertRepository demandeRepo,
-                            EvenementColisRepository eventRepo) {
+                            EvenementService evenementService) {
         this.utilisateurRepo = utilisateurRepo;
         this.organisationRepo = organisationRepo;
         this.colisRepo = colisRepo;
         this.demandeRepo = demandeRepo;
-        this.eventRepo = eventRepo;
+        this.evenementService = evenementService;
     }
 
     @Transactional
@@ -97,7 +97,7 @@ public class TransfertService {
         demande.setStatut("COMPLETED");
         demande.setDateCompletion(Instant.now());
 
-        // 2) Mettre à jour propriétaire des colis + créer événements
+        // 2) Mettre à jour propriétaire des colis + créer événements via EvenementService
         for (ColisPhysique colis : demande.getColis()) {
 
             // Ancien propriétaire
@@ -106,7 +106,7 @@ public class TransfertService {
             // Nouveau propriétaire = organisation destination
             colis.setProprietaireActuel(demande.getOrgDestination());
 
-            // Création événement transfert
+            // Création événement transfert (numeroSequence/date gérés par EvenementService)
             EvenementColis evenement = EvenementColis.builder()
                     .typeEvenement(TypeEvenement.TRANSFERT)
                     .sousType("VALIDATION_TRANSFERT")
@@ -114,10 +114,10 @@ public class TransfertService {
                     .colisPhysique(colis)
                     .realisePar(user)
                     .realiseParOrganisation(user.getOrganisation())
-                    .numeroSequence(Instant.now().toEpochMilli())  // simple seq
                     .build();
 
-            eventRepo.save(evenement);
+            // use EvenementService to compute hash, create tx and save
+            evenementService.createEventWithTx(evenement);
         }
 
         return demandeRepo.save(demande);
@@ -166,22 +166,20 @@ public class TransfertService {
         demande.setStatut("CANCELLED");
         demande.setDateCompletion(Instant.now());
 
-        // Créer événements d'annulation pour chaque colis
+        // Créer événements d'annulation pour chaque colis via EvenementService
         for (ColisPhysique colis : demande.getColis()) {
             EvenementColis ev = EvenementColis.builder()
-                    .typeEvenement(TypeEvenement.ANNULATION) // adapte si enum diffère
+                    .typeEvenement(TypeEvenement.ANNULATION)
                     .sousType("ANNULATION_DEMANDE")
                     .detailsJson("{\"demande_id\": " + demande.getId() + "}")
                     .colisPhysique(colis)
                     .realisePar(user)
                     .realiseParOrganisation(user.getOrganisation())
-                    .numeroSequence(System.currentTimeMillis())
                     .build();
-            eventRepo.save(ev);
+
+            evenementService.createEventWithTx(ev);
         }
 
         return demandeRepo.save(demande);
     }
-
-
 }

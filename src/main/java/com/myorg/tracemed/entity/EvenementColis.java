@@ -25,6 +25,9 @@ public class EvenementColis {
 
     private Long numeroSequence; // set atomically in service
 
+    @Column(name = "hash_details", length = 128)
+    private String hashDetails;
+
     @ManyToOne
     @JoinColumn(name = "colis_physique_id")
     private ColisPhysique colisPhysique;

@@ -13,18 +13,18 @@ public class ColisService {
     private final ColisPhysiqueRepository colisRepo;
     private final UtilisateurRepository utilisateurRepo;
     private final OrganisationRepository organisationRepo;
-    private final EvenementColisRepository eventRepo;
+    private final EvenementService evenementService;
 
     public ColisService(
             ColisPhysiqueRepository colisRepo,
             UtilisateurRepository utilisateurRepo,
             OrganisationRepository organisationRepo,
-            EvenementColisRepository eventRepo
+            EvenementService evenementService
     ) {
         this.colisRepo = colisRepo;
         this.utilisateurRepo = utilisateurRepo;
         this.organisationRepo = organisationRepo;
-        this.eventRepo = eventRepo;
+        this.evenementService = evenementService;
     }
 
     @Transactional
@@ -36,10 +36,9 @@ public class ColisService {
 
         Organisation org = user.getOrganisation();
 
-        // 2) chercher colis existant
+        // 2) chercher colis existant (ou créer)
         ColisPhysique colis = colisRepo.findByIdentifiantColis(identifiantColis)
                 .orElseGet(() -> {
-                    // si non existant → création
                     ColisPhysique newColis = ColisPhysique.builder()
                             .identifiantColis(identifiantColis)
                             .dateEmballage(Instant.now())
@@ -54,21 +53,18 @@ public class ColisService {
         colis.setProprietaireActuel(org);
         colisRepo.save(colis);
 
-        // 4) créer un événement
-        Long nextSeq = eventRepo.countByColisPhysique(colis) + 1;
-
+        // 4) créer un événement - déléguer à EvenementService (hash + tx + sauvegarde)
         EvenementColis event = EvenementColis.builder()
                 .colisPhysique(colis)
                 .realisePar(user)
                 .realiseParOrganisation(org)
                 .typeEvenement(TypeEvenement.RECU)
                 .sousType("RECEPTION_PHARMACIE")
-                .numeroSequence(nextSeq)
                 .detailsJson("{\"action\":\"reception\"}")
-                .dateEnregistrement(Instant.now())
+                // ne PAS définir numeroSequence ni dateEnregistrement : EvenementService gère ça
                 .build();
 
-        eventRepo.save(event);
+        evenementService.createEventWithTx(event);
 
         return colis;
     }
