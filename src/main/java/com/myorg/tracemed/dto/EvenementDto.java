@@ -2,7 +2,11 @@ package com.myorg.tracemed.dto;
 
 import lombok.*;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EvenementDto {
     private Long id;
     private String typeEvenement;
@@ -13,4 +17,6 @@ public class EvenementDto {
     private Long realiseParId;
     private String realiseParOrganisation;
     private String dateEvenement; // ISO string or fallback to numeroSequence if date absent
+    private String hashTx;
+    private String previousHash;
 }

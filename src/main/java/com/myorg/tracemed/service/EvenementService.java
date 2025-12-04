@@ -18,7 +18,7 @@ public class EvenementService {
     private final EvenementColisRepository eventRepo;
 
     public EvenementService(TransactionBlockchainRepository txRepo,
-                            EvenementColisRepository eventRepo) {
+            EvenementColisRepository eventRepo) {
         this.txRepo = txRepo;
         this.eventRepo = eventRepo;
     }
@@ -37,21 +37,35 @@ public class EvenementService {
         }
         evenement.setNumeroSequence((count == null ? 0L : count) + 1L);
 
-        // 2) compute payload to hash (concatenate relevant fields)
+        // 2) compute previous hash
+        String previousHash = "0000000000000000000000000000000000000000000000000000000000000000"; // Genesis
+        if (evenement.getNumeroSequence() > 1 && evenement.getColisPhysique() != null) {
+            Optional<EvenementColis> prevEvent = eventRepo.findByColisPhysiqueAndNumeroSequence(
+                    evenement.getColisPhysique(), evenement.getNumeroSequence() - 1);
+            if (prevEvent.isPresent() && prevEvent.get().getTxBlockchain() != null) {
+                previousHash = prevEvent.get().getTxBlockchain().getHashTx();
+            }
+        }
+
+        // 3) compute payload to hash (concatenate relevant fields + previousHash)
         String payload = (evenement.getDetailsJson() == null ? "" : evenement.getDetailsJson())
                 + "|" + (evenement.getTypeEvenement() == null ? "" : evenement.getTypeEvenement().name())
                 + "|" + (evenement.getSousType() == null ? "" : evenement.getSousType())
-                + "|" + (evenement.getColisPhysique() == null ? "" : String.valueOf(evenement.getColisPhysique().getId()))
-                + "|" + evenement.getNumeroSequence();
+                + "|"
+                + (evenement.getColisPhysique() == null ? "" : String.valueOf(evenement.getColisPhysique().getId()))
+                + "|" + evenement.getNumeroSequence()
+                + "|" + previousHash;
 
         String hash = HashUtil.sha256Hex(payload);
         evenement.setHashDetails(hash);
 
-        // 3) create or reuse TransactionBlockchain with same hash
+        // 4) create or reuse TransactionBlockchain with same hash
+        String finalPreviousHash = previousHash;
         Optional<TransactionBlockchain> existing = txRepo.findByHashTx(hash);
         TransactionBlockchain tx = existing.orElseGet(() -> {
             TransactionBlockchain t = TransactionBlockchain.builder()
                     .hashTx(hash)
+                    .previousHash(finalPreviousHash)
                     .idReseau("local")
                     .dateCreation(Instant.now())
                     .build();
