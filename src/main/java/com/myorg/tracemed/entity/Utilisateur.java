@@ -6,7 +6,11 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "utilisateur")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Utilisateur {
 
     @Id
@@ -20,7 +24,10 @@ public class Utilisateur {
 
     private String email;
 
-    private String role;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private Instant dateCreation = Instant.now();
 
