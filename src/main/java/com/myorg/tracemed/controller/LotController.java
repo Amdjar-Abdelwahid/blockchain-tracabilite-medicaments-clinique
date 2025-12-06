@@ -28,13 +28,13 @@ public class LotController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('PHARMACIEN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PHARMACIEN') or hasRole('LABORATOIRE')")
     public ResponseEntity<Lot> create(@RequestBody LotDto request) {
         return ResponseEntity.ok(service.createLot(request));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('PHARMACIEN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PHARMACIEN') or hasRole('LABORATOIRE')")
     public ResponseEntity<Lot> update(@PathVariable Long id, @RequestBody LotDto request) {
         return ResponseEntity.ok(service.updateLot(id, request));
     }

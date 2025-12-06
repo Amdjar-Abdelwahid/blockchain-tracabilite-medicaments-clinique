@@ -5,5 +5,6 @@ public enum Role {
     PHARMACIEN,
     TRANSPORTEUR,
     CLINIQUE,
+    LABORATOIRE,
     USER
 }

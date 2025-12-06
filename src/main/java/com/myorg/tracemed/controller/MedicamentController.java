@@ -27,13 +27,13 @@ public class MedicamentController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LABORATOIRE')")
     public ResponseEntity<Medicament> create(@RequestBody Medicament medicament) {
         return ResponseEntity.ok(service.createMedicament(medicament));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LABORATOIRE')")
     public ResponseEntity<Medicament> update(@PathVariable Long id, @RequestBody Medicament medicament) {
         return ResponseEntity.ok(service.updateMedicament(id, medicament));
     }
