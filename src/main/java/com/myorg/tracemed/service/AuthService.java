@@ -55,9 +55,9 @@ public class AuthService {
                 // Or fetch it via the UserDetailsService (but we just saved it).
                 // Let's create a UserDetails adapter.
                 UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                                .username(user.getUsername())
-                                .password(user.getPassword())
-                                .roles(user.getRole() != null ? user.getRole().name() : "USER")
+                                .username(savedUser.getUsername())
+                                .password(savedUser.getPassword())
+                                .roles(savedUser.getRole() != null ? savedUser.getRole().name() : "USER")
                                 .build();
 
                 var jwtToken = jwtUtils.generateToken(userDetails);
