@@ -30,4 +30,8 @@ public class TransactionBlockchain {
     private String signatairePublicId; // Username or Public Key ref
 
     private Instant dateCreation = Instant.now();
+
+    @ManyToOne
+    @JoinColumn(name = "block_id")
+    private Block block;
 }
