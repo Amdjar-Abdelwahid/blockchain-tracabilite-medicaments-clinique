@@ -23,5 +23,11 @@ public class TransactionBlockchain {
     private Instant dateBloc;
     private String urlExplorateur;
     private String previousHash;
+
+    @Column(columnDefinition = "TEXT")
+    private String signature;
+
+    private String signatairePublicId; // Username or Public Key ref
+
     private Instant dateCreation = Instant.now();
 }

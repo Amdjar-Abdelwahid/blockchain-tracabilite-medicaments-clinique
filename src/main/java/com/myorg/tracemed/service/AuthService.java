@@ -38,10 +38,16 @@ public class AuthService {
                                 .email(request.getEmail())
                                 .role(request.getRole())
                                 .dateCreation(java.time.Instant.now())
-                                .organisation(organisation)
-                                .build();
+                                .organisation(organisation);
 
-                repository.save(user);
+                // Generate Key Pair
+                java.util.Map<String, String> keys = com.myorg.tracemed.util.SignatureUtil.generateKeyPair();
+                user.publicKey(keys.get("publicKey"));
+                user.privateKey(keys.get("privateKey"));
+
+                Utilisateur savedUser = user.build();
+
+                repository.save(savedUser);
 
                 // Return token or just success. Let's return token.
                 // We need to construct UserDetails from Utilisateur manually since our Entity

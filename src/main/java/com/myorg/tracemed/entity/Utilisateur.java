@@ -26,6 +26,12 @@ public class Utilisateur {
 
     private String password;
 
+    @Column(columnDefinition = "TEXT")
+    private String publicKey;
+
+    @Column(columnDefinition = "TEXT")
+    private String privateKey;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

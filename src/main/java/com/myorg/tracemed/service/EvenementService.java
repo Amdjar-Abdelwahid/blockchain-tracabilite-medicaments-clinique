@@ -63,16 +63,33 @@ public class EvenementService {
         String finalPreviousHash = previousHash;
         Optional<TransactionBlockchain> existing = txRepo.findByHashTx(hash);
         TransactionBlockchain tx = existing.orElseGet(() -> {
+
+            String signature = null;
+            String signerId = null;
+
+            // Sign logic
+            if (evenement.getRealisePar() != null && evenement.getRealisePar().getPrivateKey() != null) {
+                try {
+                    signature = com.myorg.tracemed.util.SignatureUtil.sign(hash,
+                            evenement.getRealisePar().getPrivateKey());
+                    signerId = evenement.getRealisePar().getUsername();
+                } catch (Exception e) {
+                    throw new RuntimeException("Erreur lors de la signature de la transaction", e);
+                }
+            }
+
             TransactionBlockchain t = TransactionBlockchain.builder()
                     .hashTx(hash)
                     .previousHash(finalPreviousHash)
                     .idReseau("local")
                     .dateCreation(Instant.now())
+                    .signature(signature)
+                    .signatairePublicId(signerId)
                     .build();
             return txRepo.save(t);
         });
 
-        // 4) link and save event
+        // 5) link and save event
         evenement.setTxBlockchain(tx);
         EvenementColis saved = eventRepo.save(evenement);
 

@@ -20,6 +20,7 @@ public class DataSeeder implements CommandLineRunner {
         @Override
         public void run(String... args) throws Exception {
                 if (utilisateurRepository.findByUsername("admin").isEmpty()) {
+                        java.util.Map<String, String> keys = com.myorg.tracemed.util.SignatureUtil.generateKeyPair();
                         Utilisateur admin = Utilisateur.builder()
                                         .username("admin")
                                         .password(passwordEncoder.encode("admin123"))
@@ -27,6 +28,8 @@ public class DataSeeder implements CommandLineRunner {
                                         .nomComplet("Administrateur Système")
                                         .email("admin@tracemed.com")
                                         .dateCreation(Instant.now())
+                                        .publicKey(keys.get("publicKey"))
+                                        .privateKey(keys.get("privateKey"))
                                         .build();
                         utilisateurRepository.save(admin);
                         System.out.println("ADMIN user created: username=admin, password=admin123");

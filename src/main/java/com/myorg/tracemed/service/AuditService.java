@@ -85,6 +85,20 @@ public class AuditService {
                         + ". Données modifiées. Hash recalculé=" + recomputedHash + ", Hash stocké=" + storedHash);
             }
 
+            // 3. Verify Signature
+            // 3. Verify Signature
+            if (tx.getSignature() != null && tx.getSignatairePublicId() != null) {
+                // We use the user linked in the event to retrieve the public key
+                if (event.getRealisePar() != null && event.getRealisePar().getPublicKey() != null) {
+                    boolean isValid = com.myorg.tracemed.util.SignatureUtil.verify(storedHash, tx.getSignature(),
+                            event.getRealisePar().getPublicKey());
+                    if (!isValid) {
+                        return errorResult(identifiantColis, "Signature INVALIDE à SEQ=" + event.getNumeroSequence()
+                                + ". L'identité du signataire ne peut être vérifiée.");
+                    }
+                }
+            }
+
             // Advance
             computedPreviousHash = storedHash;
         }
