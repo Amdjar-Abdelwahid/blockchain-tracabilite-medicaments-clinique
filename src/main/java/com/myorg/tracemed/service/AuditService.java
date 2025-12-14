@@ -86,7 +86,6 @@ public class AuditService {
             }
 
             // 3. Verify Signature
-            // 3. Verify Signature
             if (tx.getSignature() != null && tx.getSignatairePublicId() != null) {
                 // We use the user linked in the event to retrieve the public key
                 if (event.getRealisePar() != null && event.getRealisePar().getPublicKey() != null) {
@@ -96,6 +95,26 @@ public class AuditService {
                         return errorResult(identifiantColis, "Signature INVALIDE à SEQ=" + event.getNumeroSequence()
                                 + ". L'identité du signataire ne peut être vérifiée.");
                     }
+                }
+            }
+
+            // 4. Verify Global Block Consensus (Merkle Root)
+            if (tx.getBlock() != null) {
+                String blockRoot = tx.getBlock().getMerkleRoot();
+
+                // Fetch all sibling transactions in this block to recompute root
+                // In a real optimized system, we would ask for a Merkle Proof.
+                // Here, since we have the DB, we fetch all txs of the block.
+                List<String> siblingHashes = tx.getBlock().getTransactions().stream()
+                        .map(TransactionBlockchain::getHashTx)
+                        .toList(); // Java 16+ or .collect(Collectors.toList())
+
+                String recomputedRoot = com.myorg.tracemed.util.MerkleTreeUtil.calculateMerkleRoot(siblingHashes);
+
+                if (!recomputedRoot.equals(blockRoot)) {
+                    return errorResult(identifiantColis, "CONSENSUS GLOBAL CORROMPU à SEQ=" + event.getNumeroSequence()
+                            + ". La Racine de Merkle du Bloc " + tx.getBlock().getId()
+                            + " ne correspond pas aux transactions.");
                 }
             }
 

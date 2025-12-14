@@ -21,6 +21,7 @@ public class BlockService {
 
     private final BlockRepository blockRepo;
     private final TransactionBlockchainRepository txRepo;
+    private final FileLedgerService fileLedgerService;
 
     /**
      * "Mines" a new block by gathering all unconfirmed transactions.
@@ -76,6 +77,9 @@ public class BlockService {
             tx.setDateBloc(now);
         }
         txRepo.saveAll(pendingTxs);
+
+        // 6. Write to File Ledger
+        fileLedgerService.writeBlock(newBlock);
 
         // Refresh block to have transactions list if needed, or return as is
         return newBlock;
