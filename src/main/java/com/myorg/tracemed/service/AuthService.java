@@ -63,6 +63,11 @@ public class AuthService {
                 var jwtToken = jwtUtils.generateToken(userDetails);
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
+                                .role(savedUser.getRole() != null ? savedUser.getRole().name() : "USER")
+                                .username(savedUser.getUsername())
+                                .organisationId(savedUser.getOrganisation() != null
+                                                ? savedUser.getOrganisation().getId()
+                                                : null)
                                 .build();
         }
 
@@ -83,6 +88,9 @@ public class AuthService {
                 var jwtToken = jwtUtils.generateToken(userDetails);
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
+                                .role(user.getRole() != null ? user.getRole().name() : "USER")
+                                .username(user.getUsername())
+                                .organisationId(user.getOrganisation() != null ? user.getOrganisation().getId() : null)
                                 .build();
         }
 }

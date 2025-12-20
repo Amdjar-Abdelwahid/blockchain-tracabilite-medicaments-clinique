@@ -28,4 +28,17 @@ public class ColisController {
         String text = "http://localhost:8080/api/audit/" + identifiant;
         return qrCodeService.generateQRCodeImage(text, 300, 300);
     }
+
+    @PostMapping("/administration")
+    public ColisPhysique administration(@RequestParam String identifiant,
+            @RequestParam String username) {
+        return colisService.administrerMedicament(identifiant, username);
+    }
+
+    @PostMapping("/incident")
+    public ColisPhysique incident(@RequestParam String identifiant,
+            @RequestParam String username,
+            @RequestParam String details) {
+        return colisService.signalerIncident(identifiant, username, details);
+    }
 }

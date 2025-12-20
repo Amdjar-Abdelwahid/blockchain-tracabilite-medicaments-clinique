@@ -1,0 +1,9 @@
+{
+  "id" : 2,
+  "hash" : "cda2dd58784d58628561dde5d2a6bff30056c7c81480f79fa4196321bbb82305",
+  "previousBlockHash" : "3729ade035c13688fae57ee73c4d2dede8746bfc5f4c6678ff701ad218b5f739",
+  "merkleRoot" : "ce49d0d221556e4a6bdd669912d5c3035a300cc6cfe7bc8e6054acf8ec77cf5e",
+  "timestamp" : "2025-12-18T19:30:34.332761100Z",
+  "nonce" : 0,
+  "transactions" : [ ]
+}

@@ -4,5 +4,6 @@ public enum StatutColis {
     CREE,
     STOCKE,
     EN_TRANSIT,
-    ADMINISTRE
+    ADMINISTRE,
+    SUSPECT
 }
