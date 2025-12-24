@@ -1,9 +1,9 @@
 {
   "id" : 1,
-  "hash" : "3729ade035c13688fae57ee73c4d2dede8746bfc5f4c6678ff701ad218b5f739",
+  "hash" : "865ccb8686ba7b0fb2df776af6087e91971897af45a29a5da3ee9e3a38bf4167",
   "previousBlockHash" : "0000000000000000000000000000000000000000000000000000000000000000",
-  "merkleRoot" : "9040748aa29fb1a1c3aac4b49b4b11ebb522043988b9835ea980cbc0aafe33e1",
-  "timestamp" : "2025-12-14T17:09:33.289879600Z",
+  "merkleRoot" : "71df546b543f02283ad466a0b9d9bbc6cec74e3079a9cf142177f94225aebfec",
+  "timestamp" : "2025-12-24T23:10:15.640455900Z",
   "nonce" : 0,
   "transactions" : [ ]
 }

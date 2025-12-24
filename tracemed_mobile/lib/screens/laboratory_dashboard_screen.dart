@@ -183,7 +183,7 @@ class _LaboratoryDashboardScreenState extends State<LaboratoryDashboardScreen> w
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DropdownButtonFormField<int>(
-                    value: selectedMedId,
+                    initialValue: selectedMedId,
                     items: meds.map<DropdownMenuItem<int>>((m) => DropdownMenuItem(value: m['id'], child: Text(m['nom']))).toList(),
                     onChanged: (v) => setState(() => selectedMedId = v),
                     decoration: const InputDecoration(labelText: 'Médicament'),

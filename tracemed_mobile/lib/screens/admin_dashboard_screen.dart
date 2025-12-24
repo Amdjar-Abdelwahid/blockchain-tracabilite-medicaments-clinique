@@ -172,13 +172,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                   TextField(controller: passwordCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Mot de passe')),
                   TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Nom Complet')),
                   DropdownButtonFormField<String>(
-                    value: role,
+                    initialValue: role,
                     items: ['USER', 'ADMIN', 'PHARMACIEN', 'TRANSPORTEUR', 'LABORATOIRE', 'CLINIQUE'].map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
                     onChanged: (v) => setState(() => role = v!),
                     decoration: const InputDecoration(labelText: 'Rôle'),
                   ),
                   DropdownButtonFormField<int>(
-                    value: selectedOrgId,
+                    initialValue: selectedOrgId,
                     items: orgs.map<DropdownMenuItem<int>>((org) => DropdownMenuItem(value: org['id'], child: Text(org['nom']))).toList(),
                     onChanged: (v) => setState(() => selectedOrgId = v),
                     decoration: const InputDecoration(labelText: 'Organisation'),

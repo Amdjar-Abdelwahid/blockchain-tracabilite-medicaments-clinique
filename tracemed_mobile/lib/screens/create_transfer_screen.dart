@@ -81,7 +81,7 @@ class _CreateTransferScreenState extends State<CreateTransferScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DropdownButtonFormField<int>(
-              value: _selectedOrgId,
+              initialValue: _selectedOrgId,
               items: _orgs.map((org) => DropdownMenuItem<int>(
                 value: org['id'], 
                 child: Text(org['name']),

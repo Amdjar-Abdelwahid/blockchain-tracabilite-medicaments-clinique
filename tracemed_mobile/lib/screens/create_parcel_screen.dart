@@ -62,7 +62,7 @@ class _CreateParcelScreenState extends State<CreateParcelScreen> {
             const SizedBox(height: 30),
             
             DropdownButtonFormField<String>(
-              value: _selectedDrug,
+              initialValue: _selectedDrug,
               items: _drugs.map((drug) => DropdownMenuItem(value: drug, child: Text(drug))).toList(),
               onChanged: (val) => setState(() => _selectedDrug = val),
               decoration: const InputDecoration(labelText: 'Nom du Médicament', border: OutlineInputBorder()),

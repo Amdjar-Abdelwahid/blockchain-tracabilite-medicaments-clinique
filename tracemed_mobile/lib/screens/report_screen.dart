@@ -76,7 +76,7 @@ class _ReportScreenState extends State<ReportScreen> {
             Theme(
               data: Theme.of(context).copyWith(primaryColor: Colors.red),
               child: DropdownButtonFormField<String>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 items: _incidentTypes.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
                 onChanged: (val) => setState(() => _selectedType = val),
                  decoration: const InputDecoration(
